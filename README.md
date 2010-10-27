@@ -8,5 +8,5 @@ This server requires [Node.js](http://github.com/ry/node) for server-side execut
 
 ## Execution ##
 
-'craig@craig-maverick:~& cd && node-websock-mlgo/server.js'
+node node-websock-mlgo/server.js
 
