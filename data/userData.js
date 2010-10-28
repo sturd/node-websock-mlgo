@@ -44,6 +44,16 @@ var userData = function()
 		}
 	}
 
+	this.setTable = function( table )
+	{	   _table = table;		}
+	this.setSlot  = function( slot )
+	{      _slot = slot;		}
+
+	this.getTable = function()
+	{
+		return _table;
+	}
+
 	// Debug function to print parsed data 
 	// to the console on the server side.
 	this.printParsed = function()
@@ -85,7 +95,7 @@ var userData = function()
 	}
 
 	// Function to allow access to user data for broadcast
-	// to users
+	// to opponents
 	this.getData = function()
 	{
 		return _data;
