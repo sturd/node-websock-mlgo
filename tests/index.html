@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title>Shapes Test</title>
+		<script src="jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="car.js"></script>
+		<style type="text/css">
+			#c{foreground-color:#333;background-color:#444;position:relative;height:480px;width:640px;}
+		</style>
+	</head>
+	<body>
+		<canvas id="c" width="640" height="480">Your browser does not support the HTML5 feature; canvas.</canvas>
+		<script type="text/javascript">
+	
+			var cnvCxt;			// Canvas context
+			var conn;			// WebSocket descriptor
+
+			var myCar;
+
+			$( function()
+			{
+				//keyInit();
+				cnvCxt = document.getElementById( "c" ).getContext( '2d' );
+				cnvCxt.fillStyle = "rgb( 1, 1, 1 )";
+
+				myCar = new Car( 304, 212, cnvCxt );
+
+				if( window.WebSocket )
+				{
+					conn = new WebSocket( "ws://localhost:1987/" );
+					conn.onopen = function()
+					{
+						setInterval( draw, 1000 / 30 );
+						// Initialise player name on server
+						conn.send( "nCraig-test" );
+					}
+				}
+			} );
+
+			function draw()
+			{
+				cnvCxt.clearRect( 0, 0, 640, 480 );
+
+				myCar.draw();
+				conn.send( myCar.getPlyrData() );
+
+				//conn.send( "x" + xPos + "y" + yPos +
+				//		   "r" + cRot +
+				//		   "i0j0" );				
+
+
+				//var xTmp = 0.5 * Math.sin( rotation * ( Math.PI / 180 ) );
+				//var yTmp = 0.5 * Math.cos( rotation * ( Math.PI / 180 ) );
+				// Accelerate/decelerate
+			}
+		</script>
+	</body>
+</html>
