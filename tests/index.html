@@ -26,7 +26,14 @@
 
 				if( window.WebSocket )
 				{
-					conn = new WebSocket( "ws://localhost:1987/" );
+					// Extract ip address from location bar for
+					// use in locating websock server
+					var loc = document.location.toString();
+					var ip = '';
+					if( loc.indexOf( 'http://' ) > -1 )
+						ip = loc.substring( 7, loc.length - 1 );
+
+					conn = new WebSocket( "ws://" + ip + ":1987/" );
 					conn.onopen = function()
 					{
 						setInterval( draw, 1000 / 30 );
