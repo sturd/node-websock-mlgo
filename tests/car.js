@@ -22,19 +22,31 @@ function Car( x, y, cxt )
 	this.draw = function()
 	{
 		cxt.save();
-		cxt.translate( xPos + 16, yPos + 45 );
-		cxt.rotate( cRot * ( Math.PI / 180 ) );
-		cxt.translate( -( xPos + 16 ), -( yPos + 28 ) );
-		cxt.fillRect( xPos, yPos, 32, 56 );
-		cxt.translate( xPos + 16, yPos + 11 );
-		cxt.rotate( wRot * ( Math.PI / 180 ) );
-		cxt.translate( -( xPos + 16 ), -( yPos + 11 ) );
-		cxt.strokeStyle = 'red';
-		cxt.lineWidth = 3;
-		cxt.beginPath();
-		cxt.moveTo( xPos + 16, yPos + 11 );
-		cxt.lineTo( xPos + 16, yPos - getTargetDist() );
-		cxt.stroke();
+			// Translate car body around middle
+			// of rear axel
+			cxt.translate( xPos + 16, yPos + 45 );
+				cxt.rotate( cRot * ( Math.PI / 180 ) );
+			cxt.translate( -( xPos + 16 ), -( yPos + 28 ) );
+
+			// TODO: Replace rectangle with pixmap
+			cxt.fillRect( xPos, yPos, 32, 56 );
+
+
+			// Steering visualisation (debug)***********************************
+			// Steering calculated around middle of
+			// front axel
+			cxt.translate( xPos + 16, yPos + 11 );
+				cxt.rotate( wRot * ( Math.PI / 180 ) );
+			cxt.translate( -( xPos + 16 ), -( yPos + 11 ) );
+
+			cxt.strokeStyle = 'red';
+			cxt.lineWidth = 3;
+
+			cxt.beginPath();
+				cxt.moveTo( xPos + 16, yPos + 11 );
+				cxt.lineTo( xPos + 16, yPos - getTargetDist() );
+			cxt.stroke();
+			//******************************************************************
 		cxt.restore();
 
 		if( getTargetDist() > whlDisp )
@@ -103,8 +115,7 @@ function Car( x, y, cxt )
 
 	var getTargetAngle = function()
 	{
-		if( cRot < cRot + wRot )
-			cRot += 2.5;
+		
 	}
 
 	this.getAngle = function()

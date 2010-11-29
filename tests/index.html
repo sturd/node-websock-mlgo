@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Shapes Test</title>
+		<title>HTML</title>
 		<script src="jquery.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="car.js"></script>
 		<style type="text/css">
@@ -18,7 +18,6 @@
 
 			$( function()
 			{
-				//keyInit();
 				cnvCxt = document.getElementById( "c" ).getContext( '2d' );
 				cnvCxt.fillStyle = "rgb( 1, 1, 1 )";
 
@@ -30,12 +29,21 @@
 					// use in locating websock server
 					var loc = document.location.toString();
 					var ip = '';
+					// Omit protocol descriptor and trailing '/' from
+					// URL to gain address for websocket connection
 					if( loc.indexOf( 'http://' ) > -1 )
 						ip = loc.substring( 7, loc.length - 1 );
+						// Handle secure hypertext transfer protocol
+						else if( loc.indexOf( 'https://' ) > -1 )
+							ip = loc.substring( 8, loc.length - 1 );
 
+					// Open websocket, connect to same
+					// location at port 1987
 					conn = new WebSocket( "ws://" + ip + ":1987/" );
+
 					conn.onopen = function()
 					{
+						// Execute draw function when connection established
 						setInterval( draw, 1000 / 30 );
 						// Initialise player name on server
 						conn.send( "nCraig-test" );
@@ -45,19 +53,10 @@
 
 			function draw()
 			{
+				// Clear canvas background
 				cnvCxt.clearRect( 0, 0, 640, 480 );
-
 				myCar.draw();
 				conn.send( myCar.getPlyrData() );
-
-				//conn.send( "x" + xPos + "y" + yPos +
-				//		   "r" + cRot +
-				//		   "i0j0" );				
-
-
-				//var xTmp = 0.5 * Math.sin( rotation * ( Math.PI / 180 ) );
-				//var yTmp = 0.5 * Math.cos( rotation * ( Math.PI / 180 ) );
-				// Accelerate/decelerate
 			}
 		</script>
 	</body>
