@@ -49,8 +49,8 @@ function Car( x, y, cxt )
 			//******************************************************************
 		cxt.restore();
 
-		if( getTargetDist() > whlDisp )
-		{
+		//if( getTargetDist() > whlDisp )
+		//{
 			if( key[ KEY_LEFT ] )
 			{
 				// Steer left
@@ -63,7 +63,7 @@ function Car( x, y, cxt )
 				if( wRot < 45 )
 					wRot += 5;
 			}
-		}
+		//}
 
 		// Power steering effect
 		if( !key[ KEY_LEFT ] && !key[ KEY_RIGHT ] )
@@ -98,14 +98,15 @@ function Car( x, y, cxt )
 		key[ e.keyCode ] = false;
 	}
 
-	var getHyp = function()
+	// Acquire angular velocity
+	var getAngVel = function()
 	{
 		return Math.sqrt( ( xVel * xVel ) + ( yVel * yVel ) );
 	}
 
 	var getTrnVector = function()
 	{
-		return getHyp() * 2;
+		return getAngVel() * 2;
 	}
 
 	var getTargetDist = function()
@@ -115,7 +116,17 @@ function Car( x, y, cxt )
 
 	var getTargetAngle = function()
 	{
-		
+		var innerL = 0;
+		// Acquire inner angle from wheel rotation
+		//if( wRot < 0 )
+			innerL = 180 + wRot;
+		//else if( wRot > 0 )
+		//	innerL = 180 - wRot;
+
+		var Hyp = Math.sqrt( ( sqr( 34 ) + sqr( getTargetDist() ) ) -
+							 ( 2 * 34 * getTargetDist() * Math.cos( ( Math.PI / 180 ) * innerL ) ) );
+
+		var lRatio = Hyp / Math.cos( ( Math.PI / 180 ) * innerL );
 	}
 
 	this.getAngle = function()
