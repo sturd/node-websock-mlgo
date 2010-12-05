@@ -15,6 +15,7 @@
 			var conn;			// WebSocket descriptor
 
 			var myCar;
+			var logo;
 
 			$( function()
 			{
@@ -22,6 +23,9 @@
 				cnvCxt.fillStyle = "rgb( 1, 1, 1 )";
 
 				myCar = new Car( 304, 212, cnvCxt );
+
+				logo = new Image();
+				logo.src = "logo.png";
 
 				if( window.WebSocket )
 				{
@@ -55,8 +59,14 @@
 			{
 				// Clear canvas background
 				cnvCxt.clearRect( 0, 0, 640, 480 );
+				cnvCxt.drawImage( logo, 640 - 188, 480 - 64 );
 				myCar.draw();
 				conn.send( myCar.getPlyrData() );
+			}
+
+			function sqr( val )
+			{
+				return val * val;
 			}
 		</script>
 	</body>

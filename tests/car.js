@@ -39,7 +39,12 @@ function Car( x, y, cxt )
 				cxt.rotate( wRot * ( Math.PI / 180 ) );
 			cxt.translate( -( xPos + 16 ), -( yPos + 11 ) );
 
-			cxt.strokeStyle = 'red';
+			if( key[ KEY_UP ] )
+				cxt.strokeStyle = 'red';
+
+			else
+				cxt.strokeStyle = 'green';
+
 			cxt.lineWidth = 3;
 
 			cxt.beginPath();
@@ -77,15 +82,42 @@ function Car( x, y, cxt )
 
 		if( key[ KEY_UP ] )
 		{
-			xVel += 1.0;
+			xVel += 0.5 * Math.sin( cRot * ( Math.PI / 180 ) );
+			yVel -= 0.5 * Math.cos( cRot * ( Math.PI / 180 ) );
 		}
 
 		else if( !key[ KEY_UP ] )
 		{
-			if( xVel > 0 )
-				xVel -= 0.5;
+			if( xVel > 0 && yVel > 0 )
+			{
+				xVel += correctX( false );
+				yVel += correctY( false );
+			}
+			else if( xVel > 0 && yVel < 0 )
+			{
+				xVel += correctX( false );
+				yVel += correctY( true  );
+			}
+			else if( xVel < 0 && yVel > 0 )
+			{
+				xVel += correctX( true  );
+				yVel += correctY( false );
+			}
+			else if( xVel < 0 && yVel < 0 )
+			{
+				xVel += correctX( true  );
+				yVel += correctY( true  );
+			}
+
 		}
-		getTargetAngle();
+		if( cRot > getTargetAngle() + cRot )
+			cRot -= 3;
+
+			else if( cRot < getTargetAngle() + cRot )
+				cRot += 3;
+
+		xPos += xVel;
+		yPos += yVel;
 	}
 
 	document.onkeydown = function( e )
@@ -116,17 +148,80 @@ function Car( x, y, cxt )
 
 	var getTargetAngle = function()
 	{
-		var innerL = 0;
-		// Acquire inner angle from wheel rotation
-		//if( wRot < 0 )
-			innerL = 180 + wRot;
-		//else if( wRot > 0 )
-		//	innerL = 180 - wRot;
+		if( wRot != 0 )
+		{
+			var innerL = 0;
+			// Acquire inner angle from wheel rotation
+			//if( wRot < 0 )
+				innerL = 180 - wRot;
+			//else if( wRot > 0 )
+			//	innerL = 180 - wRot;
 
-		var Hyp = Math.sqrt( ( sqr( 34 ) + sqr( getTargetDist() ) ) -
-							 ( 2 * 34 * getTargetDist() * Math.cos( ( Math.PI / 180 ) * innerL ) ) );
+			var Hyp = Math.sqrt( ( sqr( 34 ) + sqr( getTargetDist() ) ) -
+								 ( 2 * 34 * getTargetDist() * Math.cos( ( Math.PI / 180 ) * innerL ) ) );
 
-		var lRatio = Hyp / Math.cos( ( Math.PI / 180 ) * innerL );
+			return Math.asin( 
+				( getTargetDist() * Math.sin( 
+									( Math.PI / 180  ) * innerL ) ) / Hyp );
+		}
+		return 0;
+	}
+
+	var xAccel = function()
+	{
+		return ( xVel / 8 ) * Math.sin( cRot * ( Math.PI / 180 ) );
+	}
+
+	var yAccel = function()
+	{
+		return ( yVel / 8 ) * Math.cos( cRot * ( Math.PI / 180 ) );
+	}
+
+	var correctX = function( negative )
+	{
+		if( negative )
+		{
+			if( xAccel() < 0 )
+				return -xAccel();
+				
+				else if( xAccel() > 0 )
+					return xAccel();
+			else
+				return 0;
+		}
+		else
+		{
+			if( xAccel() > 0 )
+				return -xAccel();
+
+				else if( xAccel() < 0 )
+					return xAccel();
+			else
+				return 0;
+		}
+	}
+	var correctY = function( negative )
+	{
+		if( negative )
+		{
+			if( yAccel() < 0 )
+				return -yAccel();
+
+				else if( yAccel() > 0 )
+					return yAccel();
+			else
+				return 0;			
+		}
+		else
+		{
+			if( yAccel() > 0 )
+				return -yAccel();
+
+				else if( yAccel() < 0 )
+					return yAccel();
+			else
+				return 0;
+		}
 	}
 
 	this.getAngle = function()
